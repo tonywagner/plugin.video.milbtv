@@ -183,10 +183,10 @@ def get_params():
     return param
 
 
-def add_stream(name, title, game_pk, icon=None, fanart=None, info=None, video_info=None, audio_info=None, spoiler='True', suspended='False', start_inning='False'):
+def add_stream(name, title, game_pk, icon=None, fanart=None, info=None, video_info=None, audio_info=None, spoiler='True', suspended='False', start_inning='False', status='Preview'):
     ok=True
 
-    u=sys.argv[0]+"?mode="+str(104)+"&name="+urllib.quote_plus(name)+"&game_pk="+urllib.quote_plus(str(game_pk))+"&spoiler="+urllib.quote_plus(str(spoiler))+"&suspended="+urllib.quote_plus(str(suspended))+"&start_inning="+urllib.quote_plus(str(start_inning))
+    u=sys.argv[0]+"?mode="+str(104)+"&name="+urllib.quote_plus(name)+"&game_pk="+urllib.quote_plus(str(game_pk))+"&spoiler="+urllib.quote_plus(str(spoiler))+"&suspended="+urllib.quote_plus(str(suspended))+"&start_inning="+urllib.quote_plus(str(start_inning))+"&status="+urllib.quote_plus(str(status))
 
     liz=xbmcgui.ListItem(name)
     if icon is None: icon = ICON

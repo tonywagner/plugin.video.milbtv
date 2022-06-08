@@ -13,6 +13,7 @@ game_pk = None
 spoiler = 'True'
 suspended = 'False'
 start_inning = 'False'
+status = 'Preview'
 
 if 'mode' in params:
     mode = int(params["mode"])
@@ -37,6 +38,9 @@ if 'suspended' in params:
 
 if 'start_inning' in params:
     start_inning = urllib.unquote_plus(params["start_inning"])
+
+if 'status' in params:
+    status = urllib.unquote_plus(params["status"])
 
 # default addon home screen
 if mode is None:
@@ -64,7 +68,7 @@ elif mode == 101:
 
 # stream selection
 elif mode == 104:
-    stream_select(game_pk, spoiler, suspended, start_inning)
+    stream_select(game_pk, spoiler, suspended, start_inning, status)
 
 # Yesterday's Games
 elif mode == 105:

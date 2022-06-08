@@ -285,17 +285,12 @@ def create_game_listitem(game, game_day, start_inning, broadcast):
 
     info = {'plot': desc, 'tvshowtitle': 'MiLB', 'title': title, 'originaltitle': title, 'aired': game_day, 'genre': LOCAL_STRING(700), 'mediatype': 'video'}
 
-    add_stream(name, title, game_pk, icon, fanart, info, video_info, audio_info, spoiler, suspended, start_inning)
+    status = game['status']['abstractGameState']
+
+    add_stream(name, title, game_pk, icon, fanart, info, video_info, audio_info, spoiler, suspended, start_inning, status)
 
 
-def stream_select(game_pk, spoiler, suspended, start_inning):
-    url = API_URL + '/api/v1/game/' + game_pk + '/content'
-    headers = {
-        'User-Agent': UA_PC
-    }
-    r = requests.get(url, headers=headers, verify=VERIFY)
-    json_source = r.json()
-
+def stream_select(game_pk, spoiler, suspended, start_inning, status):
     stream_url = ''
     start = '-1' # offset to pass to inputstream adaptive
     broadcast_start_timestamp = None # to pass to skip monitor
@@ -312,16 +307,10 @@ def stream_select(game_pk, spoiler, suspended, start_inning):
     # define a dialog that we can use as needed
     dialog = xbmcgui.Dialog()
 
-    media_state = 'MEDIA_OFF'
-    epg = json_source['media']['epg'][0]['items']
-    for item in epg:
-        if item['mediaState'] != 'MEDIA_OFF':
-            media_state = item['mediaState']
-            if media_state == 'MEDIA_ON':
-                is_live = True
-            break
+    if status == 'Live':
+        is_live = True
 
-    if media_state == 'MEDIA_OFF':
+    if status != 'Live' and status != 'Final':
         msg = LOCAL_STRING(30414)
         dialog.notification(LOCAL_STRING(30415), msg, ICON, 5000, False)
         xbmcplugin.setResolvedUrl(addon_handle, False, xbmcgui.ListItem())
@@ -335,7 +324,7 @@ def stream_select(game_pk, spoiler, suspended, start_inning):
             # beginning as start point options
             start_options = [LOCAL_STRING(30426)]
             live_offset = 0
-            if media_state == "MEDIA_ON":
+            if is_live == True:
                 start_options.append(LOCAL_STRING(30427))
                 live_offset = 1
             # add inning start options
